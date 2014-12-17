@@ -43,7 +43,7 @@ class Configify(object):
     generates the output
     """
 
-    def __init__(self, config_path=None):
+    def __init__(self, config_path=None, params=None):
         if config_path is None:
             config_path = os.path.join('.', DEFAULT_CONFIG_NAME)
 
@@ -52,7 +52,7 @@ class Configify(object):
 
         self.config_path = config_path
 
-        self.params = {}
+        self.params = params or {}
         self._env = None
         self._config = None
 

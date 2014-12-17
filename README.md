@@ -43,6 +43,44 @@ server {
 }
 ```
 
+### Initial context via CLI
+You can set an initial set of context parameters right from the CLI. You might
+want to use this as some sort of an argument to filter output in the template,
+or just as extra input.
+
+**Configifile**
+
+Same as simple templates example above
+
+**nginx_vhost.conf.j2**
+```
+server {
+    listen {{ port }};
+    {% for alias in aliases %}{% if not only_alias or alias.name == only_alias -%}
+    location /{{ alias.name }} { alias {{ alias.path }}; autoindex on; }
+    {% endif %}{% endfor -%}
+}
+```
+
+**nginx.yaml**
+```yaml
+aliases:
+ - name: doc
+   path: /opt/app/doc
+ - name: video
+   path: /home/myuser/video
+```
+
+**OUTPUT**
+`configify port=8080 only_alias=doc`
+```
+server {
+    listen 8080;
+    location /doc { alias /opt/app/doc; autoindex on; }
+
+}
+```
+
 ### Templated context parameters
 Params YAML files are also run throught Jinja2 before being parsed as YAML.
 The context parameters they get are all the parameters that have been parsed

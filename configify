@@ -1,3 +1,22 @@
 #!/usr/bin/env python
+import argparse
+
 import configify
-print configify.Configify().generate()
+
+parser = argparse.ArgumentParser(description="Templated output, from templated "
+                                 "context parameters")
+parser.add_argument("--config", metavar="FILE",
+                    help="Override the default config file")
+parser.add_argument("params", nargs="*",
+                    help="key=value strings for the first level of context "
+                    "parameters")
+
+args = parser.parse_args()
+
+params = {}
+for param in args.params:
+    key, value = param.split('=', 1)
+    params[key] = value
+
+print configify.Configify(config_path=args.config,
+                          params=params).generate()
