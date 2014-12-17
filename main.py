@@ -136,4 +136,4 @@ class Configify(object):
         ).render(self.params)
 
 
-print Configify('conf.yaml').generate()
+print Configify('DEFAULT_CONFIG_NAME').generate()
