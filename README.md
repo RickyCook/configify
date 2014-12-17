@@ -1,12 +1,12 @@
-== Configify
+## Configify
 Configify lets you write templates in Jinja2, which get context variables from
 a hierarchy of parameter YAML files.
 
-=== Simple templates
+### Simple templates
 Params are loaded from yaml files, in sequence, where the later files override
 any keys from earlier files.
 
-*nginx_vhost.conf.j2*
+**nginx_vhost.conf.j2**
 ```
 server {
     listen {{ port }};
@@ -16,7 +16,7 @@ server {
 }
 ```
 
-*nginx.yaml*
+**nginx.yaml**
 ```yaml
 port: 80
 aliases:
@@ -26,14 +26,14 @@ aliases:
    path: /home/myuser/video
 ```
 
-*Configifile*
+**Configifile**
 ```yaml
 template: nginx_vhost.conf.j2
 params:
  - nginx.yaml
 ```
 
-*OUTPUT*
+**OUTPUT**
 ```
 server {
     listen 80;
@@ -43,15 +43,16 @@ server {
 }
 ```
 
-=== Templated context parameters
+### Templated context parameters
 Params YAML files are also run throught Jinja2 before being parsed as YAML.
 The context parameters they get are all the parameters that have been parsed
 up until that point (any previous YAML parameters files).
 
-*nginx_vhost.conf.j2*
+**nginx_vhost.conf.j2**
+
 Same as simple templates example above
 
-*nginx_base.yaml*
+**nginx_base.yaml**
 ```yaml
 port: 80
 app_docs:
@@ -60,7 +61,7 @@ app_docs:
  - other_app
 ```
 
-*nginx_generated.yaml*
+**nginx_generated.yaml**
 ```
 aliases:
 {%- for app in app_docs %}
@@ -69,7 +70,7 @@ aliases:
 {% endfor -%}
 ```
 
-*Configifile*
+**Configifile**
 ```yaml
 template: nginx_vhost.conf.j2
 params:
@@ -77,7 +78,8 @@ params:
  - nginx_generated.yaml
 ```
 
-*OUTPUT*
+**OUTPUT**
+```
 server {
     listen 80;
     location /doc/first_app { alias /opt/first_app/doc; autoindex on; }
@@ -85,8 +87,9 @@ server {
     location /doc/other_app { alias /opt/other_app/doc; autoindex on; }
 
 }
+```
 
-=== Post-processed variables
+### Post-processed variables
 You can defer the procesing of a parameter until after all parameters have been
 loaded by putting a $ in front of it. This way, you can have parameters that
 depend on values that have yet to be processed. Remembor to enclose any template
@@ -97,14 +100,14 @@ port: 80
 $logfile: {% raw %}/var/log/server_{{ port }}{% endraw %}
 ```
 
-=== Inline template filter
+### Inline template filter
 In your parameters, you may like to use a lightweight, partial template similar
 to a format string. There's the `inline_tpl` filter that we've added so
 that you can do just this. The template in the parameter will recieve the
 current context parameters, as well as any extra kwargs passed to the filter.
 It will _not_ receieve the local context (eg loop variables).
 
-*params.yaml*
+**params.yaml**
 ```yaml
 servername_tpl: "{% raw %}{{ subdomain.name }}.mydomain.com{% endraw %}"
 subdomains:
@@ -114,7 +117,7 @@ subdomains:
    port: 443
 ```
 
-*nginx_vhosts.conf.j2
+**nginx_vhosts.conf.j2**
 ```
 {%- for subdomain in subdomains %}
 server {
@@ -124,7 +127,7 @@ server {
 {% endfor -%}
 ```
 
-*OUTPUT*
+**OUTPUT**
 ```
 server {
     listen 80;
