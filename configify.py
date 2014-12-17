@@ -6,6 +6,8 @@ parameters
 
 import os
 
+import yaml
+
 from jinja2 import (BaseLoader,
                     ChoiceLoader,
                     contextfilter,
@@ -35,6 +37,13 @@ def inline_tpl_filter(ctx, val, **kwargs):
     params = dict(ctx.items() + kwargs.items())
     # pylint:disable=star-args
     return ctx.environment.get_template(val).render(**params)
+
+
+def yaml_filter(val):
+    """
+    Output a value as YAML
+    """
+    return yaml.dump(val)
 
 
 class Configify(object):
@@ -67,6 +76,7 @@ class Configify(object):
                 StraightThroughLoader(),
             )))
             self._env.filters['inline_tpl'] = inline_tpl_filter
+            self._env.filters['yaml'] = yaml_filter
 
         return self._env
 
