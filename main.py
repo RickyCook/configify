@@ -1,24 +1,41 @@
 #!/usr/bin/env python
+"""
+Configify generates output, based on templates, and templated context
+parameters
+"""
+
 import os
 
 from jinja2 import (BaseLoader,
                     ChoiceLoader,
                     contextfilter,
                     Environment,
-                    FileSystemLoader,
-                    )
+                    FileSystemLoader)
 from yaml import safe_load as yaml_load
 
+
+DEFAULT_CONFIG_NAME = 'Configifile'
+
+
+# pylint:disable=too-few-public-methods
 class StraightThroughLoader(BaseLoader):
+    """
+    Jinja2 loader to just return the template name as the template source
+    """
     def get_source(self, environment, template):
         return (template, None, lambda: True)
 
+
 @contextfilter
 def inline_tpl_filter(ctx, val, **kwargs):
+    """
+    Template filter to load the given template (likely StraightThroughLoader),
+    and render it with the current context params, as well as any kwargs passed
+    """
     params = dict(ctx.get('envs')[0].items() + kwargs.items())
+    # pylint:disable=star-args
     return ctx.environment.get_template(val).render(**params)
 
-DEFAULT_CONFIG_NAME = 'Configifile'
 
 class Configify(object):
     """
@@ -36,13 +53,15 @@ class Configify(object):
         self.config_path = config_path
 
         self.params = {}
+        self._env = None
+        self._config = None
 
     @property
     def env(self):
         """
         Get the Jinja2 environment
         """
-        if not hasattr(self, '_env'):
+        if self._env is None:
             self._env = Environment(loader=ChoiceLoader((
                 FileSystemLoader('.'),
                 StraightThroughLoader(),
@@ -56,9 +75,9 @@ class Configify(object):
         """
         Load the config from config_path
         """
-        if not hasattr(self, '_config'):
-            with open(self.config_path) as fh:
-                self._config = yaml_load(fh.read().decode())
+        if self._config is None:
+            with open(self.config_path) as handle:
+                self._config = yaml_load(handle.read().decode())
 
         return self._config
 
@@ -115,5 +134,6 @@ class Configify(object):
         return self.env.get_template(
             self.config['template']
         ).render(self.params)
+
 
 print Configify('conf.yaml').generate()
