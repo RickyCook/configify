@@ -1,0 +1,3 @@
+#!/usr/bin/env python
+import configify
+print configify.Configify().generate()

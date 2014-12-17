@@ -134,6 +134,3 @@ class Configify(object):
         return self.env.get_template(
             self.config['template']
         ).render(self.params)
-
-
-print Configify('DEFAULT_CONFIG_NAME').generate()
