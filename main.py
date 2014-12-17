@@ -32,7 +32,7 @@ def inline_tpl_filter(ctx, val, **kwargs):
     Template filter to load the given template (likely StraightThroughLoader),
     and render it with the current context params, as well as any kwargs passed
     """
-    params = dict(ctx.get('envs')[0].items() + kwargs.items())
+    params = dict(ctx.items() + kwargs.items())
     # pylint:disable=star-args
     return ctx.environment.get_template(val).render(**params)
 
