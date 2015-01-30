@@ -120,7 +120,9 @@ class Configify(object):
         Load an individual layer of params from file on to params
         """
         yaml_string = self.env.get_template(params_file).render(**self.params)
-        self.params.update(yaml_load(yaml_string))
+        yaml_dict = yaml_load(yaml_string)
+        self.params.update(yaml_dict)
+        self.params.setdefault('_files', {})[params_file] = yaml_dict
 
     def load_params(self):
         """
