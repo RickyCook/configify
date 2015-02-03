@@ -4,6 +4,7 @@ Configify generates output, based on templates, and templated context
 parameters
 """
 
+import glob
 import os
 
 import yaml
@@ -124,6 +125,14 @@ class Configify(object):
         self.params.update(yaml_dict)
         self.params.setdefault('_files', {})[params_file] = yaml_dict
 
+    def load_params_layer_glob(self, params_file):
+        """
+        Wrapper around load_params_layer that expands the params file from a
+        possible glob first
+        """
+        for filename in glob.glob(params_file):
+            self.load_params_layer(filename)
+
     def load_params(self):
         """
         Load all params given in the config
@@ -131,9 +140,9 @@ class Configify(object):
         params_vals = self.config['params']
         if isinstance(params_vals, (tuple, list)):
             for params_file in params_vals:
-                self.load_params_layer(params_file)
+                self.load_params_layer_glob(params_file)
         else:
-            self.load_params_layer(params_vals)
+            self.load_params_layer_glob(params_vals)
 
         self.params = self.parse_params_tpls()
 
