@@ -177,3 +177,16 @@ server {
     servername app.mydomain.com;
 }
 ```
+
+### Params file globs
+You can load up your params files from file globs, making it easy to add new
+variables and overrides.
+
+**Configifile**
+```yaml
+template: tpl.j2
+params:
+ - dev-*.yaml
+ - test-?.yaml
+ - prod-[au,uk,us]
+```
