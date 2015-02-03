@@ -188,5 +188,5 @@ template: tpl.j2
 params:
  - dev-*.yaml
  - test-?.yaml
- - prod-[au,uk,us]
+ - prod-[au,uk,us].yaml
 ```
