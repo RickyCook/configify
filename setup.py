@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='Configify',
-    version='0.0.2',
+    version='0.0.3',
     description='Templated output, from templated context parameters',
     author='Ricky Cook',
     author_email='mail@thatpanda.com',
