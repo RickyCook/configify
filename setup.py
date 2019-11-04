@@ -14,6 +14,6 @@ setup(
     install_requires=[
         'Jinja2==2.7.3',
         'MarkupSafe==0.23',
-        'PyYAML==3.11',
+        'PyYAML==5.1',
     ],
  )
