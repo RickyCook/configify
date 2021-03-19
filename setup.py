@@ -12,7 +12,7 @@ setup(
     py_modules=['configify'],
     scripts=['configify'],
     install_requires=[
-        'Jinja2==2.7.3',
+        'Jinja2==2.11.3',
         'MarkupSafe==0.23',
         'PyYAML==3.11',
     ],
